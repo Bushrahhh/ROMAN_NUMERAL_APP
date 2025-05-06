@@ -390,33 +390,62 @@
       }
 
       // Form submission
-      predictionForm.addEventListener('submit', function(e) {
-        e.preventDefault();
+// Form submission
+predictionForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const submitBtn = this.querySelector('button[type="submit"]');
+    const fileInput = document.getElementById('fileInput');
+    
+    if (!fileInput.files.length) {
+        alert('Please select an image first');
+        return;
+    }
+    
+    // Show loading state
+    predictionResult.style.display = 'none';
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Consulting the Oracles...';
+    
+    try {
+        const formData = new FormData();
+        formData.append('file', fileInput.files[0]);
         
-        // Simulate processing (replace with actual form submission)
-        predictionResult.style.display = 'none';
+        const response = await fetch('/predict', {
+            method: 'POST',
+            body: formData
+        });
         
-        const submitBtn = this.querySelector('button[type="submit"]');
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Consulting the Oracles...';
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+
+
+        }
         
-        // This is where you would normally do your form submission
-        // For demo purposes, we'll simulate a delay
-        setTimeout(function() {
-          // Show result with animation
-          predictionResult.style.display = 'block';
-          predictionResult.classList.add('fade-in');
-          
-          // Reset button
-          submitBtn.disabled = false;
-          submitBtn.innerHTML = '<i class="fas fa-eye"></i> Reveal the Numeral';
-          
-          // In a real app, you would update these with the actual prediction
-          resultValue.textContent = 'X';
-          resultDescription.textContent = 'A number of great significance, marking the Ides of March.';
-        }, 2000);
-      });
-    });
+        const data = await response.json();
+        
+        if (data.error) {
+            throw new Error(data.error);
+        }
+        
+        // Display real prediction
+        resultValue.textContent = data.prediction;
+        resultDescription.textContent = `The Oracle is ${(data.confidence * 100).toFixed(1)}% confident in this reading`;
+        predictionResult.style.display = 'block';
+        predictionResult.classList.add('fade-in');
+        
+    } catch (error) {
+        console.error('Prediction error:', error);
+        resultValue.textContent = 'Error';
+        resultDescription.textContent = `The Oracles are confused: ${error.message}`;
+        predictionResult.style.display = 'block';
+        predictionResult.classList.add('fade-in');
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fas fa-eye"></i> Reveal the Numeral';
+    }
+});
+
   </script>
 </body>
 </html>
