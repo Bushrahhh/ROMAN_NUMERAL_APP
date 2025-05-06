@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request
 import os
-import random  # This was likely missing
+import numpy as np
+from tensorflow.keras.models import load_model
+from tensorflow.keras.preprocessing.image import load_img, img_to_array
 
 # Create the app
 app = Flask(__name__)
@@ -9,7 +11,10 @@ app = Flask(__name__)
 UPLOAD_FOLDER = 'static/uploaded'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-# Fake labels for testing
+# Load the trained model
+model = load_model('model.h5')
+
+# Roman numeral labels (index matches class number)
 labels = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X']
 
 # Home route
@@ -30,10 +35,22 @@ def predict():
     filepath = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
     file.save(filepath)
 
-    # Simulate a fake prediction
-    fake_result = random.choice(labels)
+    # Load and preprocess image
+    try:
+        img = load_img(filepath, color_mode='grayscale', target_size=(28, 28))
+        img_array = img_to_array(img)
+        img_array = img_array / 255.0  # normalize
+        img_array = np.expand_dims(img_array, axis=0)  # reshape to (1, 28, 28, 1)
 
-    return f"✨ Fake Prediction: {fake_result} (Model not connected yet)"
+        # Predict using model
+        prediction = model.predict(img_array)
+        predicted_index = np.argmax(prediction)
+        predicted_label = labels[predicted_index]
+
+        return render_template('index.html', result=predicted_label, image_file=file.filename)
+
+    except Exception as e:
+        return f"Prediction failed: {str(e)}"
 
 # Run the app
 if __name__ == '__main__':
