@@ -158,40 +158,38 @@ from tensorflow.keras.models import load_model
 from PIL import Image
 import numpy as np
 import os
-from os import listdir
+import random  # This was likely missing
 
 app = Flask(__name__)
 UPLOAD_FOLDER = 'my_images'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-# Load the trained model once
-model = load_model('Romaniansarecool_full_model.h5')
-all_labels = ['i','ii','iii','iv','ix','v','vi','vii','viii','x']
+# Fake labels for testing
+labels = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X']
 
-def convert_image_to_array(image_path, size=(28, 28)):
-    image = Image.open(image_path).convert("L")  # grayscale
-    image = image.resize(size)
-    return np.array(image)
-
-@app.route('/', methods=['GET', 'POST'])
-def upload_predict():
-    if request.method == 'POST':
-        if 'file' not in request.files:
-            return redirect(request.url)
-        file = request.files['file']
-        if file.filename == '':
-            return redirect(request.url)
-        if file:
-            filepath = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
-            file.save(filepath)
-
-            img_array = convert_image_to_array(filepath)
-            img_array = img_array.reshape(1, 28, 28,1).astype('float32') / 255.0
-            prediction = model.predict(img_array)
-            predicted_label = all_labels[np.argmax(prediction)]
-
-            return render_template('result.html', label=predicted_label, filename=file.filename)
+# Home route
+@app.route('/')
+def index():
     return render_template('index.html')
 
+# Prediction route
+@app.route('/predict', methods=['POST'])
+def predict():
+    if 'file' not in request.files:
+        return "No file uploaded."
+
+    file = request.files['file']
+    if file.filename == '':
+        return "No file selected."
+
+    filepath = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+    file.save(filepath)
+
+    # Simulate a fake prediction
+    fake_result = random.choice(labels)
+
+    return f"✨ Fake Prediction: {fake_result} (Model not connected yet)"
+
+# Run the app
 if __name__ == '__main__':
     app.run(debug=True)
