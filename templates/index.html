@@ -94,16 +94,6 @@
       overflow: hidden;
     }
 
-    .form-container::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 5px;
-      background: linear-gradient(90deg, var(--gold), var(--dark-gold));
-    }
-
     .file-upload {
       position: relative;
       margin-bottom: 25px;
@@ -129,13 +119,6 @@
       font-size: 2rem;
       color: var(--gold);
       margin-bottom: 10px;
-    }
-
-    .file-upload-label span {
-      display: block;
-      margin-top: 5px;
-      font-size: 0.9rem;
-      color: #666;
     }
 
     #fileInput {
@@ -179,22 +162,6 @@
       display: none;
     }
 
-    .preview-title {
-      font-weight: bold;
-      margin-bottom: 10px;
-      color: var(--dark-gold);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    #previewImage {
-      max-width: 100%;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      box-shadow: var(--shadow);
-    }
-
     .result {
       margin-top: 25px;
       padding: 20px;
@@ -204,24 +171,12 @@
       display: none;
     }
 
-    .result-title {
-      font-weight: bold;
-      margin-bottom: 10px;
-      color: var(--dark-gold);
-      font-family: 'Cinzel', serif;
-    }
-
     .result-value {
       font-size: 1.8rem;
       font-weight: bold;
       color: var(--ink);
       text-align: center;
       margin: 15px 0;
-    }
-
-    .result-description {
-      font-style: italic;
-      color: #555;
     }
 
     footer {
@@ -237,12 +192,12 @@
       h1 {
         font-size: 2.5rem;
       }
-      
+
       .subtitle {
         font-size: 1rem;
         padding: 12px 15px;
       }
-      
+
       .form-container {
         padding: 20px;
       }
@@ -287,7 +242,7 @@
         </label>
         <div id="fileInfo" style="display: none; margin-top: 10px; font-size: 0.9rem;"></div>
       </div>
-      
+
       <button type="submit" class="submit-btn pulse">
         <i class="fas fa-eye"></i> Reveal the Numeral
       </button>
@@ -312,140 +267,71 @@
   </div>
 
   <footer class="fade-in">
-    ⚔️ Birthed in the halls of Python, brought forth by Flask ⚔️
+    ⚔ Birthed in the halls of Python, brought forth by Flask ⚔
   </footer>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const fileInput = document.getElementById('fileInput');
-      const fileUploadLabel = document.getElementById('fileUploadLabel');
-      const fileInfo = document.getElementById('fileInfo');
-      const previewBox = document.getElementById('previewBox');
-      const previewImage = document.getElementById('previewImage');
-      const predictionForm = document.getElementById('predictionForm');
-      const predictionResult = document.getElementById('predictionResult');
-      const resultValue = document.getElementById('resultValue');
-      const resultDescription = document.getElementById('resultDescription');
-
-      // File upload handling
-      fileInput.addEventListener('change', function() {
-        const file = this.files[0];
-        if (file) {
-          // Update UI with file info
-          fileInfo.style.display = 'block';
-          fileInfo.innerHTML = `
-            <strong>Selected:</strong> ${file.name}<br>
-            <strong>Size:</strong> ${(file.size/1024).toFixed(1)} KB
-          `;
-          
-          // Show preview
-          previewBox.style.display = 'block';
-          previewImage.src = URL.createObjectURL(file);
-          
-          // Update label appearance
-          fileUploadLabel.innerHTML = `
-            <i class="fas fa-check-circle" style="color: #4CAF50;"></i>
-            <div>File ready for divination</div>
-          `;
-          fileUploadLabel.style.borderColor = '#4CAF50';
-          fileUploadLabel.style.backgroundColor = 'rgba(76, 175, 80, 0.05)';
-        }
-      });
-
-      // Drag and drop functionality
-      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-        fileUploadLabel.addEventListener(eventName, preventDefaults, false);
-      });
-
-      function preventDefaults(e) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-
-      ['dragenter', 'dragover'].forEach(eventName => {
-        fileUploadLabel.addEventListener(eventName, highlight, false);
-      });
-
-      ['dragleave', 'drop'].forEach(eventName => {
-        fileUploadLabel.addEventListener(eventName, unhighlight, false);
-      });
-
-      function highlight() {
-        fileUploadLabel.style.borderColor = 'var(--gold)';
-        fileUploadLabel.style.backgroundColor = 'rgba(212, 175, 55, 0.1)';
-      }
-
-      function unhighlight() {
-        fileUploadLabel.style.borderColor = 'var(--border)';
-        fileUploadLabel.style.backgroundColor = 'var(--aged-paper)';
-      }
-
-      fileUploadLabel.addEventListener('drop', handleDrop, false);
-
-      function handleDrop(e) {
-        const dt = e.dataTransfer;
-        const files = dt.files;
-        fileInput.files = files;
-        fileInput.dispatchEvent(new Event('change'));
-      }
-
-      // Form submission
-// Form submission
-predictionForm.addEventListener('submit', async function(e) {
-    e.preventDefault();
-    
-    const submitBtn = this.querySelector('button[type="submit"]');
-    const fileInput = document.getElementById('fileInput');
-    
-    if (!fileInput.files.length) {
-        alert('Please select an image first');
-        return;
-    }
-    
-    // Show loading state
-    predictionResult.style.display = 'none';
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Consulting the Oracles...';
-    
-    try {
-        const formData = new FormData();
-        formData.append('file', fileInput.files[0]);
-        
-        const response = await fetch('/predict', {
-            method: 'POST',
-            body: formData
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <!-- Keep your existing head section unchanged -->
+    <!-- ... -->
+  </head>
+  <body>
+    <!-- Keep your existing body structure unchanged -->
+    <!-- ... -->
+  
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const fileInput = document.getElementById('fileInput');
+        const predictionForm = document.getElementById('predictionForm');
+        const predictionResult = document.getElementById('predictionResult');
+        const resultValue = document.getElementById('resultValue');
+  
+        // File input handler
+        fileInput.addEventListener('change', function() {
+          if (this.files[0]) {
+            const previewImage = document.getElementById('previewImage');
+            previewImage.src = URL.createObjectURL(this.files[0]);
+            document.getElementById('previewBox').style.display = 'block';
+          }
         });
-        
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+  
+        // Form submission handler
+        predictionForm.addEventListener('submit', async function(e) {
+          e.preventDefault();
+          
+          if (!fileInput.files[0]) {
+            alert('Please select an image first!');
+            return;
+          }
+  
+          const formData = new FormData();
+          formData.append('file', fileInput.files[0]);
+  
+          try {
+            const response = await fetch('http://localhost:5000/predict', {
+              method: 'POST',
+              body: formData
+            });
+  
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            
+            const data = await response.json();
+            
+            resultValue.textContent = data.prediction || 'Unknown';
+            predictionResult.style.display = 'block';
+  
+          } catch (error) {
+            console.error('Prediction error:', error);
+            resultValue.textContent = 'Error';
+            predictionResult.style.display = 'block';
+          }
+        });
+      });
+    </script>
+  </body>
+  </html>
 
-
-        }
-        
-        const data = await response.json();
-        
-        if (data.error) {
-            throw new Error(data.error);
-        }
-        
-        // Display real prediction
-        resultValue.textContent = data.prediction;
-        resultDescription.textContent = `The Oracle is ${(data.confidence * 100).toFixed(1)}% confident in this reading`;
-        predictionResult.style.display = 'block';
-        predictionResult.classList.add('fade-in');
-        
-    } catch (error) {
-        console.error('Prediction error:', error);
-        resultValue.textContent = 'Error';
-        resultDescription.textContent = `The Oracles are confused: ${error.message}`;
-        predictionResult.style.display = 'block';
-        predictionResult.classList.add('fade-in');
-    } finally {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = '<i class="fas fa-eye"></i> Reveal the Numeral';
-    }
-});
-
-  </script>
+  
 </body>
 </html>
