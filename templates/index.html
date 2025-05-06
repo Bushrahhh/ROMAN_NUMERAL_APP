@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JULEUS CAESER — The Oracle of Numerals</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=EB+Garamond:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --gold: #d4af37;
+      --dark-gold: #8c6c1d;
+      --parchment: #f8f3e6;
+      --aged-paper: #e1d9c6;
+      --ink: #3b2f1d;
+      --border: #a67c3d;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--parchment);
+      font-family: 'EB Garamond', serif;
+      color: var(--ink);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 40px 20px;
+      background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 20% 30%, transparent 60%, rgba(212, 175, 55, 0.1) 100%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    h1 {
+      font-family: 'Cinzel', serif;
+      font-size: 3.5rem;
+      color: var(--gold);
+      text-shadow: 0 2px 4px rgba(139, 107, 11, 0.3);
+      margin-bottom: 15px;
+      letter-spacing: 3px;
+      position: relative;
+      text-align: center;
+    }
+
+    h1::after {
+      content: "";
+      display: block;
+      width: 100px;
+      height: 3px;
+      background: linear-gradient(to right, var(--gold), transparent);
+      margin: 10px auto;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: var(--ink);
+      margin-bottom: 40px;
+      text-align: center;
+      max-width: 600px;
+      line-height: 1.6;
+      padding: 15px 25px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.7);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(166, 124, 61, 0.2);
+    }
+
+    .form-container {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 30px;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .form-container::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(90deg, var(--gold), var(--dark-gold));
+    }
+
+    .file-upload {
+      position: relative;
+      margin-bottom: 25px;
+    }
+
+    .file-upload-label {
+      display: block;
+      padding: 20px;
+      border: 2px dashed var(--border);
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: var(--aged-paper);
+    }
+
+    .file-upload-label:hover {
+      border-color: var(--gold);
+      background: rgba(212, 175, 55, 0.05);
+    }
+
+    .file-upload-label i {
+      font-size: 2rem;
+      color: var(--gold);
+      margin-bottom: 10px;
+    }
+
+    .file-upload-label span {
+      display: block;
+      margin-top: 5px;
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    #fileInput {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .submit-btn {
+      background: linear-gradient(to bottom, var(--gold), var(--dark-gold));
+      color: white;
+      border: none;
+      padding: 15px;
+      font-size: 1rem;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 100%;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-family: 'Cinzel', serif;
+      box-shadow: 0 4px 10px rgba(140, 108, 29, 0.3);
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(140, 108, 29, 0.4);
+    }
+
+    .submit-btn:active {
+      transform: translateY(0);
+    }
+
+    .preview {
+      margin-top: 25px;
+      display: none;
+    }
+
+    .preview-title {
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: var(--dark-gold);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    #previewImage {
+      max-width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .result {
+      margin-top: 25px;
+      padding: 20px;
+      border-radius: 8px;
+      background: rgba(212, 175, 55, 0.1);
+      border-left: 4px solid var(--gold);
+      display: none;
+    }
+
+    .result-title {
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: var(--dark-gold);
+      font-family: 'Cinzel', serif;
+    }
+
+    .result-value {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: var(--ink);
+      text-align: center;
+      margin: 15px 0;
+    }
+
+    .result-description {
+      font-style: italic;
+      color: #555;
+    }
+
+    footer {
+      margin-top: 50px;
+      font-size: 0.9rem;
+      color: var(--border);
+      text-align: center;
+      padding: 15px;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 2.5rem;
+      }
+      
+      .subtitle {
+        font-size: 1rem;
+        padding: 12px 15px;
+      }
+      
+      .form-container {
+        padding: 20px;
+      }
+    }
+
+    /* Animation classes */
+    .fade-in {
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+
+  <h1 class="fade-in">JULEUS CAESER</h1>
+  <div class="subtitle fade-in">
+    The oracle of Rome reborn. Present your symbol, and the ancient wisdom shall reveal its numerical truth.
+  </div>
+
+  <div class="form-container fade-in">
+    <form action="/predict" method="POST" enctype="multipart/form-data" id="predictionForm">
+      <div class="file-upload">
+        <label class="file-upload-label" id="fileUploadLabel">
+          <i class="fas fa-scroll"></i>
+          <div>Choose an image or drag it here</div>
+          <span>Supports JPG, PNG (Max 5MB)</span>
+          <input type="file" name="file" id="fileInput" accept="image/*" required>
+        </label>
+        <div id="fileInfo" style="display: none; margin-top: 10px; font-size: 0.9rem;"></div>
+      </div>
+      
+      <button type="submit" class="submit-btn pulse">
+        <i class="fas fa-eye"></i> Reveal the Numeral
+      </button>
+    </form>
+
+    <div class="preview" id="previewBox">
+      <div class="preview-title">
+        <i class="fas fa-image"></i> Symbol Preview
+      </div>
+      <img id="previewImage" src="#">
+    </div>
+
+    <div class="result" id="predictionResult">
+      <div class="result-title">
+        <i class="fas fa-crown"></i> Oracle's Verdict
+      </div>
+      <div class="result-value" id="resultValue">V</div>
+      <div class="result-description" id="resultDescription">
+        The numeral of power and balance, as decreed by the Senate.
+      </div>
+    </div>
+  </div>
+
+  <footer class="fade-in">
+    ⚔️ Birthed in the halls of Python, brought forth by Flask ⚔️
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const fileInput = document.getElementById('fileInput');
+      const fileUploadLabel = document.getElementById('fileUploadLabel');
+      const fileInfo = document.getElementById('fileInfo');
+      const previewBox = document.getElementById('previewBox');
+      const previewImage = document.getElementById('previewImage');
+      const predictionForm = document.getElementById('predictionForm');
+      const predictionResult = document.getElementById('predictionResult');
+      const resultValue = document.getElementById('resultValue');
+      const resultDescription = document.getElementById('resultDescription');
+
+      // File upload handling
+      fileInput.addEventListener('change', function() {
+        const file = this.files[0];
+        if (file) {
+          // Update UI with file info
+          fileInfo.style.display = 'block';
+          fileInfo.innerHTML = `
+            <strong>Selected:</strong> ${file.name}<br>
+            <strong>Size:</strong> ${(file.size/1024).toFixed(1)} KB
+          `;
+          
+          // Show preview
+          previewBox.style.display = 'block';
+          previewImage.src = URL.createObjectURL(file);
+          
+          // Update label appearance
+          fileUploadLabel.innerHTML = `
+            <i class="fas fa-check-circle" style="color: #4CAF50;"></i>
+            <div>File ready for divination</div>
+          `;
+          fileUploadLabel.style.borderColor = '#4CAF50';
+          fileUploadLabel.style.backgroundColor = 'rgba(76, 175, 80, 0.05)';
+        }
+      });
+
+      // Drag and drop functionality
+      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        fileUploadLabel.addEventListener(eventName, preventDefaults, false);
+      });
+
+      function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+
+      ['dragenter', 'dragover'].forEach(eventName => {
+        fileUploadLabel.addEventListener(eventName, highlight, false);
+      });
+
+      ['dragleave', 'drop'].forEach(eventName => {
+        fileUploadLabel.addEventListener(eventName, unhighlight, false);
+      });
+
+      function highlight() {
+        fileUploadLabel.style.borderColor = 'var(--gold)';
+        fileUploadLabel.style.backgroundColor = 'rgba(212, 175, 55, 0.1)';
+      }
+
+      function unhighlight() {
+        fileUploadLabel.style.borderColor = 'var(--border)';
+        fileUploadLabel.style.backgroundColor = 'var(--aged-paper)';
+      }
+
+      fileUploadLabel.addEventListener('drop', handleDrop, false);
+
+      function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        fileInput.files = files;
+        fileInput.dispatchEvent(new Event('change'));
+      }
+
+      // Form submission
+      predictionForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Simulate processing (replace with actual form submission)
+        predictionResult.style.display = 'none';
+        
+        const submitBtn = this.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Consulting the Oracles...';
+        
+        // This is where you would normally do your form submission
+        // For demo purposes, we'll simulate a delay
+        setTimeout(function() {
+          // Show result with animation
+          predictionResult.style.display = 'block';
+          predictionResult.classList.add('fade-in');
+          
+          // Reset button
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<i class="fas fa-eye"></i> Reveal the Numeral';
+          
+          // In a real app, you would update these with the actual prediction
+          resultValue.textContent = 'X';
+          resultDescription.textContent = 'A number of great significance, marking the Ides of March.';
+        }, 2000);
+      });
+    });
+  </script>
+</body>
+</html>
